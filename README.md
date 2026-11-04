@@ -1,5 +1,20 @@
 # Towards the Virtual ALS Patient
 
+This study investigates how changes in regional excitability and large-scale coupling may contribute to altered brain dynamics in amyotrophic lateral sclerosis (ALS). We use a stochastic whole-brain network model to relate model parameters to features of neuronal avalanche transition matrices (ATMs). A central question is whether separating motor-frontal excitability from excitability in the remaining regions provides information beyond a single global excitability parameter.
+
+We examine two separate inference configurations:
+
+- **Global configuration:** a common excitability parameter, W, for all regions, together with a freely varying coupling parameter, G.
+- **Regional configuration:** separate excitability parameters for motor-frontal regions (WF) and the remaining regions (WNF), jointly inferred with G.
+
+In both configurations, simulations generate six features of the directional ATM: the mean and median of the upper and lower triangles, the matrix norm, and singular-value entropy. Normalized features are used to train a neural posterior estimator. Held-out synthetic cases with known parameters are used to assess parameter recovery, posterior uncertainty and interval coverage.
+
+The broader study applies this framework to empirical ALS and control data to examine group differences and associations with clinical outcomes. Simulations generated from inferred parameters are also compared with empirical ATM features and avalanche-size distributions to assess how well the inferred model reproduces observed dynamics. These analyses evaluate a model-based account of excitability; they do not establish a causal origin of ALS-related changes.
+
+This repository provides the synthetic simulation and inference workflow. It includes a demo with a synthetic connectome and a study configuration requiring the original connectome, supplied separately by the user. Empirical recordings, clinical data and subject-level inferred results are not distributed here.
+
+## Notebooks
+
 Two notebooks demonstrate the study pipeline without empirical or clinical data.
 
 1. `notebooks/01_uniform_W_G.ipynb`: explore W and G, show six ATM heatmaps and raw-signal mean/variance, then train and validate on synthetic data.
