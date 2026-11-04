@@ -1,0 +1,35 @@
+{
+  "config": {
+    "output": "results",
+    "global_low": [
+      2.0,
+      1.5
+    ],
+    "global_high": [
+      4.0,
+      2.5
+    ],
+    "global_simulations": 4000,
+    "design_seed": 20261022,
+    "split_seed": 42,
+    "training_seed": 455,
+    "posterior_samples": 1000,
+    "max_epochs": 400,
+    "model_sha256": "db5ee544d5473b804e4a54e8b9af4cac07c72cf974203e06cfd8d82f3b3f88aa"
+  },
+  "parameters": [
+    "w",
+    "G"
+  ],
+  "low": [
+    2.0,
+    1.5
+  ],
+  "high": [
+    4.0,
+    2.5
+  ],
+  "count": 4000,
+  "seed": 20261022,
+  "fixed_G": null
+}

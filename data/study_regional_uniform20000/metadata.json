@@ -1,0 +1,36 @@
+{
+  "configuration": "study",
+  "mode": "regional",
+  "simulations": 20000,
+  "parameters": [
+    "wf",
+    "wnf",
+    "G"
+  ],
+  "low": [
+    2,
+    2,
+    1.5
+  ],
+  "high": [
+    4,
+    4,
+    2.5
+  ],
+  "design_seed": 20261028,
+  "features": [
+    "ATM_mean_mat",
+    "ATM_median_mat",
+    "ATM_norm",
+    "Entropy_ATM_SVD",
+    "ATM_mean_lower",
+    "ATM_median_lower"
+  ],
+  "b": 0.16,
+  "connectome_sha256": "f6041c04c236031dc80f516883ad2b442f3c310034af110d60a100cf1b2e4fc8",
+  "connectome_included": false,
+  "model_sha256": "db5ee544d5473b804e4a54e8b9af4cac07c72cf974203e06cfd8d82f3b3f88aa",
+  "csv_sha256": "2d90112bfa30d6b7d40381a589091cb921db16424e9f5dd0a455bcee4337f133",
+  "feature_values": "Raw simulator-derived metrics, before min-max normalization",
+  "provenance": "Exported study simulation bank; original connectome identity checked against locally available study input. Connectome provenance and redistribution terms remain to be documented."
+}
