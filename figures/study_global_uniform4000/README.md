@@ -8,12 +8,6 @@ Shrinkage panels use x=[0,1] and z-score y=[0,8]. Values outside those limits ar
 
 Equal-width bins of the true parameter (10 per parameter). Recovery errors are in parameter units. Their error bars are pointwise percentile bootstrap 95% confidence intervals, based on 2,000 resamples of test cases within each bin (seed 42). Bins with fewer than two cases have no error interval. MAE and RMSE positions are slightly offset for readability. Coverage is the fraction of cases whose true value lies in the inferred 95% credible interval. Bars show pointwise 95% Wilson intervals; n indicates the number of cases per bin. Results are marginal over the other parameter. Historical preprocessing settings apply, as above.
 
-![W parameter-dependent recovery](w_parameter_dependent_recovery_bootstrap.png)
-
-![G parameter-dependent recovery](G_parameter_dependent_recovery_bootstrap.png)
-
----
-
 ## General synthetic validation
 
 ### W
@@ -37,4 +31,8 @@ Equal-width bins of the true parameter (10 per parameter). Recovery errors are i
 
 ![G coverage](G_coverage.png)
 
+![W parameter-dependent recovery](w_parameter_dependent_recovery_bootstrap.png)
 
+![G parameter-dependent recovery](G_parameter_dependent_recovery_bootstrap.png)
+
+---
