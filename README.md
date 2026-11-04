@@ -35,6 +35,7 @@ The 100-point demo exploration and the 4,000-case demo simulation bank are compl
 | Folder | Network | Parameters | Cases |
 | --- | --- | --- | ---: |
 | `data/demo_uniform4000/` | Synthetic demo | W, G | 4,000 |
+| `data/demo_regional_uniform20000/` | Synthetic demo | WF, WNF, G | 20,000 |
 | `data/study_global_uniform4000/` | Original study connectome | W, G | 4,000 |
 | `data/study_regional_uniform20000/` | Original study connectome | WF, WNF, G | 20,000 |
 
