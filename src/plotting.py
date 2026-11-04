@@ -60,3 +60,73 @@ def validation_figures(folder):
         summaries.append(dict(parameter=name,n_test=len(data),MAE=abs(error).mean(),RMSE=np.sqrt((error**2).mean()),coverage95=covered.mean()))
     summary=pd.DataFrame(summaries);summary.to_csv(folder/'validation_summary.csv',index=False)
     return summary
+
+
+def parameter_dependent_recovery(folder, bins=10):
+    """Evaluate marginal recovery by true-parameter bins on synthetic test cases.
+
+    Bins cover the full prior. Empty bins remain missing. Coverage uncertainty
+    uses pointwise 95% Wilson intervals; it is not a posterior credible interval.
+    """
+    folder=Path(folder)
+    if not isinstance(bins,int) or bins<2:
+        raise ValueError('bins must be an integer of at least 2')
+    table=pd.read_csv(folder/'validation.csv')
+    with np.load(folder/'posterior_samples.npz') as saved:
+        names=saved['parameters'].tolist()
+        low=saved['low'];high=saved['high']
+    if names!=['w','G']:
+        raise ValueError('This analysis expects the global W-G model')
+    records=[]
+    for j,name in enumerate(names):
+        data=table.loc[table.parameter==name].copy()
+        if not data.truth.between(low[j],high[j]).all():
+            raise ValueError('True parameter outside the prior')
+        edges=np.linspace(low[j],high[j],bins+1)
+        membership=np.clip(np.searchsorted(edges,data.truth,side='right')-1,0,bins-1)
+        for k in range(bins):
+            part=data.loc[membership==k]
+            n=len(part)
+            error=part['mean']-part.truth
+            covered=part['covered_0.95']
+            if covered.dtype==object:
+                covered=covered.astype(str).str.lower().map({'true':True,'false':False})
+                if covered.isna().any():raise ValueError('Invalid coverage indicator')
+            hits=int(covered.sum()) if n else 0
+            rate=hits/n if n else np.nan
+            # Wilson score interval for the coverage fraction across test cases.
+            if n:
+                z=1.959963984540054
+                den=1+z*z/n
+                center=(rate+z*z/(2*n))/den
+                half=z*np.sqrt(rate*(1-rate)/n+z*z/(4*n*n))/den
+                lo,hi=center-half,center+half
+            else:lo,hi=np.nan,np.nan
+            records.append(dict(parameter=name,bin=k,lower=edges[k],upper=edges[k+1],
+                center=(edges[k]+edges[k+1])/2,n_test=n,
+                MAE=abs(error).mean(),RMSE=np.sqrt((error**2).mean()),
+                bias=error.mean(),coverage95=rate,coverage_lo95=lo,coverage_hi95=hi))
+    result=pd.DataFrame(records)
+    result.to_csv(folder/'parameter_dependent_recovery.csv',index=False)
+    for j,name in enumerate(names):
+        part=result[result.parameter==name]
+        valid=part[part.n_test>0]
+        fig,axes=plt.subplots(2,1,figsize=(7,6.5),sharex=True)
+        color=COLORS[name]
+        axes[0].plot(part.center.to_numpy(),part.MAE.to_numpy(),'o-',color=color,label='MAE')
+        axes[0].plot(part.center.to_numpy(),part.RMSE.to_numpy(),'s--',color=color,alpha=.7,label='RMSE')
+        axes[0].set(ylabel='Recovery error',title='Parameter-dependent recovery: '+name)
+        axes[0].legend(frameon=False)
+        axes[1].errorbar(valid.center.to_numpy(),valid.coverage95.to_numpy(),
+            yerr=np.vstack([valid.coverage95-valid.coverage_lo95,
+                            valid.coverage_hi95-valid.coverage95]),
+            fmt='o',color=color,capsize=3,label='Observed coverage; 95% Wilson interval')
+        axes[1].axhline(.95,color='black',ls='--',label='Nominal 95%')
+        for row in part.itertuples():
+            axes[1].text(row.center,.035,'n='+str(row.n_test),ha='center',rotation=90,fontsize=8)
+        axes[1].set(xlabel='True '+name,ylabel='95% credible-interval coverage',
+                    xlim=(low[j],high[j]),ylim=(0,1.04))
+        axes[1].legend(frameon=False,fontsize=8,loc='lower right')
+        fig.tight_layout()
+        save(fig,folder/'figures',name+'_parameter_dependent_recovery')
+    return result
