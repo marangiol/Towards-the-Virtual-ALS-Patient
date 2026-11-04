@@ -3,7 +3,6 @@ from numba import njit
 
 @njit(cache=True)
 def directional_atm(binary):
-    """Stessa media delle transizioni non nulle della pipeline precedente."""
     n, t = binary.shape
     total = np.zeros((n, n))
     nonzero = np.zeros((n, n))
