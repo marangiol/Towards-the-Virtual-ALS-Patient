@@ -38,6 +38,13 @@ The 100-point demo exploration and the 4,000-case demo simulation bank are compl
 
 Study banks contain raw synthetic ATM features and parameter values. The original connectome and all empirical and clinical tables remain excluded. Read the README and metadata within each bank before use. Training on the saved features does not require the connectome; regenerating study simulations does.
 
+## Synthetic validation figures
+
+- [Global W-G, 4,000 study simulations](figures/study_global_uniform4000/README.md)
+- [Regional WF-WNF-G, 20,000 study simulations](figures/study_regional_uniform20000/README.md)
+
+These figures use archived synthetic validation results. They are distinct from the freshly trained demo and from rerunning the notebooks with the default training-only normalization. Each gallery documents this distinction.
+
 ## Setup
 
 Use an isolated Python environment (the study cluster uses Python 3.11):
