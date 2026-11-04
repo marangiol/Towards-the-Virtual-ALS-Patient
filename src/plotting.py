@@ -46,7 +46,7 @@ def validation_figures(folder):
         save(fig,folder/'figures',name+'_six_cases')
         fig,ax=plt.subplots(figsize=(6,5));ax.scatter(data.shrinkage,data.zscore,s=12,c=color,alpha=.4)
         ax.scatter(data.iloc[selected].shrinkage,data.iloc[selected].zscore,s=60,facecolors='none',edgecolors='black')
-        ax.set(xlabel='Posterior shrinkage',ylabel='Absolute posterior z-score',title=name)
+        ax.set(xlabel='Posterior shrinkage',ylabel='Absolute posterior z-score',title=name, xlim=(0,1), ylim=(0,8))
         save(fig,folder/'figures',name+'_shrinkage_zscore')
         covered=data['covered_0.95'].to_numpy(bool)
         fig,ax=plt.subplots(figsize=(6,5))
