@@ -13,6 +13,12 @@ The broader study applies this framework to empirical ALS and control data to ex
 
 This repository provides the synthetic simulation and inference workflow. It includes a demo with a synthetic connectome and a study configuration requiring the original connectome, supplied separately by the user. Empirical recordings, clinical data and subject-level inferred results are not distributed here.
 
+## Study overview
+
+![Study overview: empirical MEG avalanche features, whole-brain model configurations, simulation-based inference and clinical analyses](docs/images/study_overview.png)
+
+*Graphical overview of the study: extraction of empirical avalanche transition matrix features, whole-brain simulations with uniform or regional excitability, and simulation-based inference of model parameters. The figure also summarizes the empirical analyses; the notebooks in this repository provide the synthetic workflow.*
+
 ## Notebooks
 
 Two notebooks demonstrate the study pipeline without empirical or clinical data.
