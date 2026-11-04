@@ -62,7 +62,7 @@ def validation_figures(folder):
     return summary
 
 
-def parameter_dependent_recovery(folder, bins=10):
+def parameter_dependent_recovery(folder, bins=10, bootstrap_repetitions=2000, seed=42):
     """Evaluate marginal recovery by true-parameter bins on synthetic test cases.
 
     Bins cover the full prior. Empty bins remain missing. Coverage uncertainty
@@ -77,6 +77,9 @@ def parameter_dependent_recovery(folder, bins=10):
         low=saved['low'];high=saved['high']
     if names!=['w','G']:
         raise ValueError('This analysis expects the global W-G model')
+    if bootstrap_repetitions<100:
+        raise ValueError('Use at least 100 bootstrap repetitions')
+    rng=np.random.default_rng(seed)
     records=[]
     for j,name in enumerate(names):
         data=table.loc[table.parameter==name].copy()
@@ -102,10 +105,16 @@ def parameter_dependent_recovery(folder, bins=10):
                 half=z*np.sqrt(rate*(1-rate)/n+z*z/(4*n*n))/den
                 lo,hi=center-half,center+half
             else:lo,hi=np.nan,np.nan
+            # Resample test cases within this bin, preserving each case's error.
+            if n>=2:
+                draws=rng.choice(error.to_numpy(),size=(bootstrap_repetitions,n),replace=True)
+                mae_lo,mae_hi=np.quantile(np.abs(draws).mean(axis=1),[.025,.975])
+                rmse_lo,rmse_hi=np.quantile(np.sqrt((draws**2).mean(axis=1)),[.025,.975])
+            else:mae_lo,mae_hi,rmse_lo,rmse_hi=[np.nan]*4
             records.append(dict(parameter=name,bin=k,lower=edges[k],upper=edges[k+1],
                 center=(edges[k]+edges[k+1])/2,n_test=n,
                 MAE=abs(error).mean(),RMSE=np.sqrt((error**2).mean()),
-                bias=error.mean(),coverage95=rate,coverage_lo95=lo,coverage_hi95=hi))
+                bias=error.mean(),MAE_lo95=mae_lo,MAE_hi95=mae_hi,RMSE_lo95=rmse_lo,RMSE_hi95=rmse_hi,coverage95=rate,coverage_lo95=lo,coverage_hi95=hi))
     result=pd.DataFrame(records)
     result.to_csv(folder/'parameter_dependent_recovery.csv',index=False)
     for j,name in enumerate(names):
@@ -113,10 +122,14 @@ def parameter_dependent_recovery(folder, bins=10):
         valid=part[part.n_test>0]
         fig,axes=plt.subplots(2,1,figsize=(7,6.5),sharex=True)
         color=COLORS[name]
-        axes[0].plot(part.center.to_numpy(),part.MAE.to_numpy(),'o-',color=color,label='MAE')
-        axes[0].plot(part.center.to_numpy(),part.RMSE.to_numpy(),'s--',color=color,alpha=.7,label='RMSE')
+        for metric,marker,style,offset in [('MAE','o','-',-.035),('RMSE','s','--',.035)]:
+            y=part[metric].to_numpy()
+            errors=np.vstack([y-part[metric+'_lo95'].to_numpy(),part[metric+'_hi95'].to_numpy()-y])
+            axes[0].errorbar(part.center.to_numpy()+offset*(high[j]-low[j])/bins,y,
+                yerr=np.maximum(errors,0),fmt=marker+style,color=color,capsize=3,
+                alpha=1 if metric=='MAE' else .7,label=metric+'; bootstrap 95% CI')
         axes[0].set(ylabel='Recovery error',title='Parameter-dependent recovery: '+name)
-        axes[0].legend(frameon=False)
+        axes[0].legend(frameon=False,loc='upper center',bbox_to_anchor=(.5,-.12),fontsize=9)
         axes[1].errorbar(valid.center.to_numpy(),valid.coverage95.to_numpy(),
             yerr=np.vstack([valid.coverage95-valid.coverage_lo95,
                             valid.coverage_hi95-valid.coverage95]),
@@ -126,7 +139,7 @@ def parameter_dependent_recovery(folder, bins=10):
             axes[1].text(row.center,.035,'n='+str(row.n_test),ha='center',rotation=90,fontsize=8)
         axes[1].set(xlabel='True '+name,ylabel='95% credible-interval coverage',
                     xlim=(low[j],high[j]),ylim=(0,1.04))
-        axes[1].legend(frameon=False,fontsize=8,loc='lower right')
-        fig.tight_layout()
+        axes[1].legend(frameon=False,fontsize=8,loc='upper center',bbox_to_anchor=(.5,-.22))
+        fig.tight_layout(h_pad=3)
         save(fig,folder/'figures',name+'_parameter_dependent_recovery')
     return result
