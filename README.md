@@ -1,17 +1,19 @@
 # Towards the Virtual ALS Patient
 
-This study investigates how changes in regional excitability and large-scale coupling may contribute to altered brain dynamics in amyotrophic lateral sclerosis (ALS). We use a stochastic whole-brain network model to relate model parameters to features of neuronal avalanche transition matrices (ATMs). A central question is whether separating motor-frontal excitability from excitability in the remaining regions provides information beyond a single global excitability parameter.
+Amyotrophic lateral sclerosis (ALS) is a multisystem neurodegenerative disorder in which motor-neuron degeneration is accompanied by widespread changes in cortical dynamics. Cortical hyperexcitability is a consistent neurophysiological finding, particularly in motor and premotor areas. How these local circuit alterations shape distributed whole-brain activity remains poorly understood.
 
-We examine two separate inference configurations:
+This study combines source-reconstructed resting-state magnetoencephalography (MEG), tractography-informed whole-brain modeling, and simulation-based inference (SBI) to investigate whether changes in recurrent excitation can account for ALS-related alterations in large-scale brain dynamics. Neuronal avalanche transition matrices (ATMs) characterize how activity propagates across brain regions and provide the features used for model inversion.
 
-- **Global configuration:** a common excitability parameter, W, for all regions, together with a freely varying coupling parameter, G.
-- **Regional configuration:** separate excitability parameters for motor-frontal regions (WF) and the remaining regions (WNF), jointly inferred with G.
+We use a stochastic reduced Wong-Wang model of interacting excitatory populations coupled through a structural connectome. Local recurrent excitation serves as a model-based descriptor of excitability-related circuit changes; inhibition is not represented by a separately inferred parameter. Two complementary configurations are fitted independently:
 
-In both configurations, simulations generate six features of the directional ATM: the mean and median of the upper and lower triangles, the matrix norm, and singular-value entropy. Normalized features are used to train a neural posterior estimator. Held-out synthetic cases with known parameters are used to assess parameter recovery, posterior uncertainty and interval coverage.
+- **Global configuration:** a shared recurrent-excitation parameter, W, across all 80 regions, jointly inferred with global coupling, G.
+- **Regional configuration:** separate recurrent-excitation parameters for a 34-region motor-frontal partition (WF) and the complementary 46-region partition (WNF), jointly inferred with G. The motor-frontal partition includes motor-related and frontal association areas and is not an exclusively motor network.
 
-The broader study applies this framework to empirical ALS and control data to examine group differences and associations with clinical outcomes. Simulations generated from inferred parameters are also compared with empirical ATM features and avalanche-size distributions to assess how well the inferred model reproduces observed dynamics. These analyses evaluate a model-based account of excitability; they do not establish a causal origin of ALS-related changes.
+In both configurations, G is freely estimated. Six directional ATM features are used: the mean and median of the upper and lower triangles, the matrix norm, and singular-value entropy. Normalized features condition a neural posterior estimator, yielding joint distributions over model parameters. Synthetic cases with known parameters are used to assess recovery accuracy, posterior uncertainty, and credible-interval coverage.
 
-This repository provides the synthetic simulation and inference workflow. It includes a demo with a synthetic connectome and a study configuration requiring the original connectome, supplied separately by the user. Empirical recordings, clinical data and subject-level inferred results are not distributed here.
+In the empirical study, ALS patients exhibited higher model-derived recurrent excitation than controls. The regional analysis investigated the anatomical distribution of these alterations, and higher motor-frontal recurrent excitation was associated with greater functional impairment. Together, these findings support enhanced recurrent excitation as a candidate mechanism contributing to altered large-scale avalanche propagation in ALS and motivate further investigation of its regional and clinical relevance.
+
+This repository makes the synthetic simulation and inference workflow available through two notebooks, reusable functions, simulation banks, and validation figures. A synthetic-connectome demo supports running the workflow without private inputs; the study configuration uses the original connectome. The distributed banks contain synthetic model outputs, while empirical recordings, clinical data, and subject-level inferred results are not included.
 
 ## Study overview
 
