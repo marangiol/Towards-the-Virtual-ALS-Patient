@@ -1,0 +1,9 @@
+{
+  "name": "demo",
+  "description": "Example with a synthetic network. Does not reproduce the study results.",
+  "connectome": {
+    "kind": "synthetic",
+    "seed": 42,
+    "n_regions": 80
+  }
+}

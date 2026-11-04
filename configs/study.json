@@ -1,0 +1,9 @@
+{
+  "name": "study",
+  "description": "Original study network. The user must provide the original file.",
+  "connectome": {
+    "kind": "file",
+    "path": "data/private/connectome.npz",
+    "sha256": "f6041c04c236031dc80f516883ad2b442f3c310034af110d60a100cf1b2e4fc8"
+  }
+}

@@ -1,0 +1,14 @@
+numpy
+scipy
+pandas
+matplotlib
+numba
+vbi
+torch
+sbi
+jupyterlab
+nbformat
+pytest
+
+tqdm
+ipywidgets

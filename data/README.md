@@ -1,0 +1,1 @@
+No original connectome or empirical data are included. The demo creates a synthetic network in memory. For study mode place the authorized original connectome at data/private/connectome.npz. Its provenance and redistribution terms remain to be documented.
