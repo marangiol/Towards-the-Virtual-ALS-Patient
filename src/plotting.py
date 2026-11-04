@@ -141,5 +141,5 @@ def parameter_dependent_recovery(folder, bins=10, bootstrap_repetitions=2000, se
                     xlim=(low[j],high[j]),ylim=(0,1.04))
         axes[1].legend(frameon=False,fontsize=8,loc='upper center',bbox_to_anchor=(.5,-.22))
         fig.tight_layout(h_pad=3)
-        save(fig,folder/'figures',name+'_parameter_dependent_recovery')
+        save(fig,folder/'figures',name+'_parameter_dependent_recovery_bootstrap')
     return result
